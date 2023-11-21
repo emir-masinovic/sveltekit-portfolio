@@ -1,45 +1,44 @@
 <script>
-    import Navbar from '../components/Navbar.svelte';
+	import Navbar from '../components/Navbar.svelte';
+	export const prerender = true;
+	// export const trailingSlash = 'always';
 </script>
 
-<Navbar/>
-<slot></slot>
+<Navbar />
+<slot />
 
 <style>
-    /*@import "../css/breakpoint.css";*/
+	/*@import "../css/breakpoint.css";*/
+	@import url('https://fonts.googleapis.com/css2?family=Hammersmith+One&family=Poppins:wght@300&display=swap');
 
-    @font-face {
-        /* font-family: "Roboto"; */
-        /* src: url(/src/fonts/Roboto-Thin.ttf); */
-        /*font-family: 'Roboto', sans-serif;*/
-        /*src: url(/src/fonts/Poppins-Regular.ttf);*/
-    }
+	:global(*) {
+		padding: 0;
+		margin: 0;
+		box-sizing: border-box;
+		font-weight: 400;
+		font-family: 'Poppins', sans-serif;
+	}
 
-    :global(*) {
-        padding: 0;
-        margin: 0;
-        box-sizing: border-box;
-        font-weight: 400;
-    }
+	:root {
+		--background: #464e56;
+		--text: #fff;
+		--border: black;
+		--transition-time: 1s;
+		font-size: 62.5%;
+	}
 
-    :root {
-        --background: #464e56;
-        --text: #fff;
-        --border: black;
-        --transition-time: 1s;
-    }
+	:global(.light-theme) {
+		--background: #fff6ea;
+		--text: rgba(0, 0, 0, 0.9);
+	}
 
-    :global(.light-theme) {
-        --background: #fff6ea;
-        --text: rgba(0, 0, 0, 0.9);
-    }
-
-    :global(body) {
-        /*height: 100vh;*/
-        /*overflow: hidden;*/
-        width: 100%;
-        background-color: var(--background);
-        transition: var(--transition-time);
-        color: var(--text);
-    }
+	:global(body) {
+		width: 100%;
+		/*height: calc(100vh);*/
+		/*overflow: hidden;*/
+		background-color: var(--background);
+		transition: var(--transition-time);
+		color: var(--text);
+		font-size: 1.6rem;
+	}
 </style>

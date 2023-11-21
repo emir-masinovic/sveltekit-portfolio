@@ -1,205 +1,213 @@
-<div class="calculator-container">
-    <div class="calculator-header">
-        <div>CASIO</div>
-        <div class="casio-black"></div>
-    </div>
-    <div class="calculator-body">
-        <div class="display">0</div>
-    </div>
-    <div class="calculator-footer">
-        <div class="buttons-container"></div>
-    </div>
-</div>
-
 <script>
-    import {onMount} from 'svelte';
+	const buttons = [
+		{ text: 'AC', className: 'btn-clear' },
+		{ text: '√', className: 'btn-operation' },
+		{ text: 'x²', className: 'btn-operation' },
+		{ text: '%', className: 'btn-operation' },
+		{ text: '7', className: 'btn-number' },
+		{ text: '8', className: 'btn-number' },
+		{ text: '9', className: 'btn-number' },
+		{ text: '÷', className: 'btn-operation' },
+		{ text: '4', className: 'btn-number' },
+		{ text: '5', className: 'btn-number' },
+		{ text: '6', className: 'btn-number' },
+		{ text: '×', className: 'btn-operation' },
+		{ text: '1', className: 'btn-number' },
+		{ text: '2', className: 'btn-number' },
+		{ text: '3', className: 'btn-number' },
+		{ text: '-', className: 'btn-operation' },
+		{ text: '0', className: 'btn-number' },
+		{ text: '.', className: 'btn-number' },
+		{ text: '=', className: 'btn-equals' },
+		{ text: '+', className: 'btn-operation' }
+	];
 
-    const buttons = [
-        {text: "AC", className: "btn-clear"},
-        {text: "√", className: "btn-operation"},
-        {text: "x²", className: "btn-operation"},
-        {text: "%", className: "btn-operation"},
-        {text: "7", className: "btn-number"},
-        {text: "8", className: "btn-number"},
-        {text: "9", className: "btn-number"},
-        {text: "/", className: "btn-operation"},
-        {text: "4", className: "btn-number"},
-        {text: "5", className: "btn-number"},
-        {text: "6", className: "btn-number"},
-        {text: "*", className: "btn-operation"},
-        {text: "1", className: "btn-number"},
-        {text: "2", className: "btn-number"},
-        {text: "3", className: "btn-number"},
-        {text: "-", className: "btn-operation"},
-        {text: "0", className: "btn-number"},
-        {text: ".", className: "btn-number"},
-        {text: "=", className: "btn-equals"},
-        {text: "+", className: "btn-operation"},
-    ];
+	let inputArray = '';
+	let display = '0';
 
-    let inputArray = "";
-    let display;
+	function handleButton(event) {
+		const pressedButton = event.target.innerText;
 
-    onMount(() => {
-        display = document.querySelector(".display");
-    });
+		// Case 1: Pressing 0 continuously. Don't add zeros
+		if (inputArray === '' && pressedButton === '0') return;
 
-    function handleButtonClick(event) {
-        event.preventDefault();
+		// Case 2: Switching operations. Leave last one
+		if (inputArray === '' && ['+', '-', '×', '÷'].includes(pressedButton)) {
+			inputArray = '0' + pressedButton;
+			display = inputArray;
+			return;
+		}
 
-        const pressedButton = event.target.innerText;
-        switch (pressedButton) {
-            case "AC":
-                handleACButton();
-                break;
-            case "=":
-                handleEqualsButton();
-                break;
-            case "x²":
-                handleSquareButton();
-                break;
-            case "√":
-                handleRootButton();
-                break;
-            case "%":
-                handlePercentageButton();
-                break;
-            default:
-                handleNumberButton(pressedButton);
-                break;
-        }
-    }
+		// Case 3: When there are two operations next to each other
+		const lastChar = inputArray.charAt(inputArray.length - 1);
+		if (['+', '-', '×', '÷'].includes(lastChar) && ['+', '-', '×', '÷'].includes(pressedButton)) {
+			// Replace the last operator with the new one
+			inputArray = inputArray.slice(0, -1) + pressedButton;
+			display = inputArray;
+			return;
+		}
 
-    function handleNumberButton(pressedButton) {
-        inputArray += pressedButton;
-        updateDisplay();
-    }
+		switch (pressedButton) {
+			case 'AC':
+				display = '0';
+				inputArray = '';
+				break;
+			case '=':
+				handleEqualsButton();
+				break;
+			case '×':
+				display += pressedButton;
+				inputArray += '*';
+				break;
+			case '÷':
+				display += pressedButton;
+				inputArray += '/';
+				break;
+			case 'x²':
+				if (display === '0') {
+					display += `²`;
+					inputArray = '0**2';
+				} else {
+					display += `²`;
+					inputArray += '**2';
+				}
 
-    function handlePercentageButton() {
-        inputArray += "/100*";
-        updateDisplay();
-    }
+				break;
+			case '√':
+				if (display === '0') {
+					display = pressedButton;
+				} else {
+					display += pressedButton;
+					// inputArray = pressedButton + '**(1/2)';
+					inputArray = display.replace('√', '**(1/2)');
+					console.log(inputArray);
+				}
+				break;
+			case '%':
+				// display += pressedButton;
+				// inputArray += '/100*';
 
-    function handleACButton() {
-        display.textContent = "0";
-        inputArray = "";
-    }
+				if (display === '0') {
+					display = pressedButton;
+					inputArray = '';
+				} else {
+					display += pressedButton;
+					inputArray += '/100*';
+				}
+				break;
+			default:
+				inputArray += pressedButton;
+				if (display === '0' || display === 'ERROR') {
+					display = pressedButton;
+				} else {
+					display += pressedButton;
+				}
+				break;
+		}
+	}
 
-    function handleSquareButton() {
-        inputArray += "**2";
-        handleEqualsButton();
-    }
-
-    function handleRootButton() {
-        const regex = /-/g;
-        const matches = inputArray.match(regex);
-
-        if (matches && matches.includes("-")) {
-            inputArray = "ERROR";
-        } else {
-            inputArray += "**(1/2)";
-        }
-
-        updateDisplay();
-        handleEqualsButton();
-    }
-
-    function handleEqualsButton() {
-        if (inputArray === "") return;
-        const result = evaluateExpression(inputArray);
-        inputArray = result.toString(); // Assign the evaluated result back to inputArray
-        updateDisplay();
-    }
-
-    function updateDisplay() {
-        if (inputArray.includes("/100*")) {
-            display.textContent = inputArray.replace("/100*", "%");
-        } else {
-            display.textContent = inputArray;
-        }
-    }
-
-    function evaluateExpression(str) {
-        return Function(`'use strict'; return (${str})`)();
-    }
+	function handleEqualsButton() {
+		console.log('Trying to compute: ', inputArray);
+		try {
+			inputArray = Function(`'use strict'; return (${inputArray})`)().toString();
+			display = inputArray;
+			console.log('Inside try block: ', inputArray);
+		} catch (err) {
+			inputArray = '';
+			display = 'ERROR';
+			console.log('Inside error block: ', err.message);
+		}
+	}
 </script>
 
+<div class="calculator-container">
+	<div class="calculator-header">
+		<div>CASIO</div>
+		<div class="casio-black" />
+	</div>
+	<div class="calculator-body">
+		<div class="display">{display}</div>
+	</div>
+	<div class="calculator-footer">
+		<div class="buttons-container">
+			{#each buttons as { text, className }}
+				<button class={className} on:pointerdown={handleButton}>{text}</button>
+			{/each}
+		</div>
+	</div>
+</div>
 
 <style>
+	.calculator-container {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		width: 90%;
+		padding: 20px;
+		background-color: rgb(128, 128, 128);
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		box-shadow: rgba(0, 0, 0, 0.1) 0 -23px 25px 0 inset, rgba(0, 0, 0, 0.15) 0 -36px 30px 0 inset,
+			rgba(0, 0, 0, 0.1) 0 -79px 40px 0 inset, rgba(0, 0, 0, 0.06) 0 2px 1px,
+			rgba(0, 0, 0, 0.09) 0 4px 2px, rgba(0, 0, 0, 0.09) 0 8px 4px, rgba(0, 0, 0, 0.09) 0 16px 8px,
+			rgba(0, 0, 0, 0.09) 0 32px 16px;
+		font-size: 3.5rem;
+	}
 
-    .calculator-container {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 90%;
-        padding: 1rem;
-        background-color: gray;
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-        box-shadow: rgba(0, 0, 0, 0.1) 0px -23px 25px 0px inset,
-        rgba(0, 0, 0, 0.15) 0px -36px 30px 0px inset,
-        rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset,
-        rgba(0, 0, 0, 0.06) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px,
-        rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px,
-        rgba(0, 0, 0, 0.09) 0px 32px 16px;
-    }
+	.calculator-header {
+		display: flex;
+		justify-content: space-between;
+	}
 
-    .calculator-header {
-        display: flex;
-        justify-content: space-between;
-        font-size: 2.5rem;
-    }
+	.casio-black {
+		width: 30%;
+		background: rgba(0, 0, 0, 0.7);
+	}
 
-    .casio-black {
-        width: 30%;
-        background: rgba(0, 0, 0, 0.7);
-    }
+	.display {
+		padding: 5px;
+		background-color: #a2bbcf;
+		text-align: right;
+		box-shadow: inset 0 0 5px 2px rgba(0, 0, 0, 0.5);
+		overflow: hidden;
+		word-wrap: break-word;
+	}
 
-    .display {
-        padding: 0.5rem;
-        background-color: #a2bbcf;
-        text-align: right;
-        font-size: 2rem;
-        box-shadow: inset 0 0 5px 2px rgba(0, 0, 0, 0.5);
-    }
+	.buttons-container {
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+		grid-template-rows: repeat(4, 1fr);
+		padding: 10px;
+		gap: 8px;
+	}
 
-    .buttons-container {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        grid-template-rows: repeat(4, 1fr);
-        padding: 0.2rem;
-        gap: 0.5rem;
-    }
+	.buttons-container button {
+		height: 60px;
+		/*padding: 5px;*/
+		color: rgba(255, 255, 255, 0.8);
+		background-color: rgba(0, 0, 0, 0.7);
+		border: none;
+		user-select: none;
+		cursor: pointer;
+		text-align: center;
+		font-size: 2.5rem;
+		font-family: 'Poppins', sans-serif;
+		box-shadow: rgba(0, 0, 0, 0.25) 0 3px 5px, rgba(0, 0, 0, 0.22) 0 3px 3px;
+	}
 
-    .buttons-container button {
-        height: 4rem;
-        padding: 0.5rem;
-        color: rgba(255, 255, 255, 0.8);
-        background-color: rgba(0, 0, 0, 0.7);
-        border: none;
-        user-select: none;
-        cursor: pointer;
-        text-align: center;
-        font-size: 1.5rem;
-        font-family: 'Poppins', sans-serif;
-        box-shadow: rgba(0, 0, 0, 0.25) 0px 3px 5px, rgba(0, 0, 0, 0.22) 0px 3px 3px;
-    }
+	.buttons-container button:active {
+		background-color: rgba(0, 0, 0, 0.5);
+	}
 
-    .buttons-container button:active {
-        background-color: rgba(0, 0, 0, 0.5);
-    }
+	@media (min-width: 576px) {
+		.calculator-container {
+			width: 500px;
+			/*font-size: 2rem;*/
+		}
 
-    @media (min-width: 576px) {
-        .calculator-container {
-            width: 500px;
-            font-size: 2rem;
-        }
-
-        .buttons-container button {
-            height: 4rem;
-            font-size: 1.5rem;
-        }
-    }
+		/*.buttons-container button {*/
+		/*}*/
+	}
 </style>

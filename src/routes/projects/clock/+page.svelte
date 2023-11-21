@@ -1,100 +1,131 @@
 <script>
-    import {onMount} from 'svelte';
+	import { onMount } from 'svelte';
 
-    let clock, hour, minute, second;
-    let intervalId;
+	let clock, hour, minute, second;
+	let intervalId;
 
-    onMount(() => {
-        const remValue = parseFloat(getComputedStyle(document.documentElement).fontSize);
-        const chooseShortWindowSide = Math.min(window.innerWidth, window.innerHeight) - remValue;
-        const deg = 6;
+	onMount(() => {
+		const deg = 6;
+		const remValue = parseFloat(getComputedStyle(document.documentElement).fontSize);
+		const chooseShortWindowSide = Math.min(window.innerWidth, window.innerHeight) - remValue;
 
-        clock.style.height = (chooseShortWindowSide - (2 * remValue) - 80) + "px";
-        clock.style.width = (chooseShortWindowSide - (2 * remValue) - 80) + "px";
+		clock.style.height = chooseShortWindowSide - 2 * remValue - 80 + 'px';
+		clock.style.width = chooseShortWindowSide - 2 * remValue - 80 + 'px';
 
-        hour.style.height = clock.offsetWidth / 4 + "px"
-        hour.style.width = 0.6 + "rem"
-        minute.style.height = clock.offsetWidth / 2.5 + "px"
-        minute.style.width = 0.4 + "rem"
-        second.style.height = clock.offsetWidth / 2 - 8 + "px"
-        second.style.width = 0.3 + "rem"
+		hour.style.height = clock.offsetWidth / 4 + 'px';
+		hour.style.width = 8 + 'px';
+		minute.style.height = clock.offsetWidth / 2.5 + 'px';
+		minute.style.width = 6 + 'px';
+		second.style.height = clock.offsetWidth / 2 - 8 + 'px';
+		second.style.width = 4 + 'px';
 
-        intervalId = setInterval(() => {
-            const date = new Date();
-            const hourDate = date.getHours() * 30;
-            const minuteDate = date.getMinutes() * deg;
-            const secondDate = date.getSeconds() * deg;
+		intervalId = setInterval(() => {
+			const date = new Date();
+			const hourDate = date.getHours() * 30;
+			const minuteDate = date.getMinutes() * deg;
+			const secondDate = date.getSeconds() * deg;
 
-            hour.style.transform = `rotateZ(${hourDate + (minuteDate / 12)}deg)`;
-            minute.style.transform = `rotateZ(${minuteDate}deg)`;
-            second.style.transform = `rotateZ(${secondDate}deg)`;
-        }, 1000);
+			hour.style.transform = `rotateZ(${hourDate + minuteDate / 12}deg)`;
+			minute.style.transform = `rotateZ(${minuteDate}deg)`;
+			second.style.transform = `rotateZ(${secondDate}deg)`;
+		}, 1000);
 
-        return () => {
-            clearInterval(intervalId);
-        }
-    });
+		return () => {
+			clearInterval(intervalId);
+		};
+	});
 </script>
 
 <div class="clock-container">
-    <div class="clock" bind:this={clock}>
-        <div class="center"></div>
-        <div class="hour" bind:this={hour}></div>
-        <div class="minute" bind:this={minute}></div>
-        <div class="second" bind:this={second}></div>
-    </div>
+	<div class="clock" bind:this={clock}>
+		<div class="center" />
+		<div class="hour" bind:this={hour} />
+		<div class="minute" bind:this={minute} />
+		<div class="second" bind:this={second} />
+		<div class="mark-12 mark" />
+		<div class="mark-3 mark" />
+		<div class="mark-6 mark" />
+		<div class="mark-9 mark" />
+	</div>
 </div>
 
-
 <style>
+	.clock-container {
+		height: calc(100vh - 80px);
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
 
-    .clock-container {
-        height: calc(100vh - 80px);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
+	.clock {
+		position: relative;
+		display: -webkit-box;
+		display: -ms-flexbox;
+		display: flex;
+		-webkit-box-pack: center;
+		-ms-flex-pack: center;
+		justify-content: center;
+		-webkit-box-align: center;
+		-ms-flex-align: center;
+		align-items: center;
+		border: 1px solid var(--border);
+		background-color: var(--navbar);
+		border-radius: 50%;
+	}
 
-    .clock {
-        position: relative;
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-        -webkit-box-pack: center;
-        -ms-flex-pack: center;
-        justify-content: center;
-        -webkit-box-align: center;
-        -ms-flex-align: center;
-        align-items: center;
-        border: .35rem solid black;
-        background-color: lightblue;
-        border-radius: 50%;
-    }
+	.center {
+		position: absolute;
+		width: 20px;
+		height: 20px;
+		background-color: var(--background);
+		border: 1px solid var(--border);
+		border-radius: 50%;
+		z-index: 10;
+	}
 
-    .center {
-        width: 1rem;
-        height: 1rem;
-        background-color: cornflowerblue;
-        border-radius: 50%;
-        z-index: 1;
-    }
+	.hour,
+	.minute,
+	.second {
+		position: absolute;
+		z-index: 2;
+		top: 50%;
+		rotate: 180deg;
+		-webkit-transform-origin: top;
+		-ms-transform-origin: top;
+		transform-origin: top;
+		background-color: var(--link-faded);
+		border-radius: 0 0 5px 5px;
+		border: 1px solid var(--border);
+		transition: 1s;
+	}
 
-    .hour, .minute, .second {
-        position: absolute;
-        top: 50%;
-        rotate: 180deg;
-        -webkit-transform-origin: top;
-        -ms-transform-origin: top;
-        transform-origin: top;
-        background-color: black;
-        border-radius: 0 0 .4rem .4rem;
-    }
+	.mark {
+		position: absolute;
+		height: 30px;
+		width: 8px;
+		margin: 2px;
+		background-color: var(--link-faded);
+		border: 1px solid var(--border);
+		/*z-index: 0;*/
+	}
 
-    .minute {
-        background-color: green;
-    }
+	.mark-12 {
+		top: 0;
+	}
 
-    .second {
-        background-color: red;
-    }
+	.mark-3 {
+		right: 0;
+		transform: rotate(90deg);
+		margin: 14px;
+	}
+
+	.mark-6 {
+		bottom: 0;
+	}
+
+	.mark-9 {
+		left: 0;
+		transform: rotate(90deg);
+		margin: 14px;
+	}
 </style>

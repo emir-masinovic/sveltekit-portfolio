@@ -1,0 +1,19 @@
+/*Small Tablets	321 - 480*/
+@media (min-width: 30rem) {
+}
+
+/*Tablets	481 - 768*/
+@media (min-width: 48rem) {
+}
+
+/*Small Laptops	769 - 1024*/
+@media (min-width: 64rem) {
+}
+
+/*Medium Laptops	1025 - 1200*/
+@media (min-width: 75rem) {
+}
+
+/*Large Laptops	1201 - 1600*/
+@media (min-width: 100rem) {
+}
