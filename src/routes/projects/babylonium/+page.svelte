@@ -1,62 +1,84 @@
 <script>
 	import { onMount } from 'svelte';
 	import * as BABYLON from '@babylonjs/core';
-	import * as Material from '@babylonjs/materials';
-	import { createArcRotateCamera, createFreeCamera, switchCam } from '$lib/cameras.js';
-	import { createGridBox } from '$lib/createGridBox.js';
+	// import * as BABYLON from '@babylonjs/core/Legacy/legacy';
+	// import * as Material from '@babylonjs/materials';
+	import '@babylonjs/loaders/';
+	// import { AdvancedDynamicTexture } from '@babylonjs/gui';
 
-	let shape, engine, scene, arcCamera, freeCamera;
+	import { createArcRotateCamera, createFreeCamera } from '$lib/cameras.js';
+	import { createGround } from '$lib/ground.js';
+	import { createPlayer, createPlayerClones } from '$lib/player.js';
+	import { setupInputHandling } from '$lib/inputs.js';
+	import { setupSkybox } from '$lib/skybox.js';
+	import { importMesh } from '$lib/importMesh.js';
+
+	let engine, scene;
 
 	async function createScene() {
+		let divFps = document.getElementById('fps');
+
+		// const gui = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI('gui', true, scene);
+		// void gui.parseFromSnippetAsync('1F2VJQ');
+		// let loadedGui = await AdvancedDynamicTexture.ParseFromURLAsync('/menu.json');
+
 		let canvas = document.getElementById('renderCanvas');
 		engine = new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true });
 		engine.displayLoadingUI();
 		scene = new BABYLON.Scene(engine);
+		scene.enablePhysics(new BABYLON.Vector3(0, -9.81, 0), new BABYLON.CannonJSPlugin());
+		scene.collisionsEnabled = true;
+		// scene.useRightHandedSystem = true;
 
-		let gridBox = createGridBox(scene);
-		shape = gridBox;
-		arcCamera = createArcRotateCamera(scene);
-		freeCamera = createFreeCamera(scene);
-		arcCamera.lockedTarget = shape;
-		switchCam('arc camera', arcCamera, freeCamera, canvas, shape, scene);
+		// const light = new BABYLON.HemisphericLight('light', new BABYLON.Vector3(0, 1, 0), scene);
+		// light.intensity = 0.7;
 
-		window.addEventListener('keydown', (event) => {
-			if (event.key === 'c') {
-				switchCam('arc camera', arcCamera, freeCamera, canvas, shape, scene);
-			}
-		});
+		let arcCamera = createArcRotateCamera(scene);
+		let freeCamera = createFreeCamera(scene);
+		let gridPlane = createGround(scene);
+		let player = createPlayer(scene);
+		arcCamera.lockedTarget = player;
+		arcCamera.attachControl(canvas, false);
+		freeCamera.attachControl(canvas, false);
+		// scene.activeCamera = arcCamera;
 
-		let frontUV = new BABYLON.Vector4(0, 0, 0.5, 1);
-		let backUV = new BABYLON.Vector4(0.5, 0, 1, 1);
-		let gridPlane = BABYLON.MeshBuilder.CreatePlane(
-			'gridPlane',
-			{
-				width: 1000,
-				height: 1000,
-				sideOrientation: BABYLON.Mesh.DOUBLESIDE,
-				frontUVs: frontUV,
-				backUVs: backUV
-			},
+		const followCamera = new BABYLON.FollowCamera(
+			'FollowCamera',
+			new BABYLON.Vector3(0, 0, 0),
 			scene
 		);
-		gridPlane.position.x = 0;
-		gridPlane.position.y = -0.5;
-		gridPlane.rotation.x = BABYLON.Tools.ToRadians(90);
+		followCamera.lockedTarget = player;
+		scene.activeCamera = followCamera;
 
-		let gridPlaneMaterial = new Material.GridMaterial('gridPlaneMaterial', scene);
-		gridPlaneMaterial.gridRatio = 3;
-		gridPlaneMaterial.majorUnitFrequency = 30;
-		gridPlaneMaterial.lineColor = BABYLON.Color3.FromHexString('#fe01f5');
-		gridPlane.material = gridPlaneMaterial;
+		followCamera.rotationOffset = 180;
 
-		engine.hideLoadingUI();
+		// console.log(arcCamera.position);
+
+		setupInputHandling(canvas, scene, player, engine, freeCamera, arcCamera, gridPlane);
+		setupSkybox(scene);
+
+		const maxClones = 10;
+		const radius = 10;
+		createPlayerClones(maxClones * 5, radius, player, scene);
+		// createPlayerClones(20, 20, player, scene);
+		// createPlayerClones(30, 30, player, scene);
+
+		importMesh(scene);
+
+		scene.registerBeforeRender(() => {
+			// console.log(player);
+			divFps.innerText = engine.getFps().toFixed() + ' fps';
+			if (player.position.y < -100) player.position = new BABYLON.Vector3(0, 0, 0);
+		});
+
+		return scene;
 	}
 
 	onMount(async () => {
 		await createScene();
+		engine.hideLoadingUI();
 
 		engine.runRenderLoop(() => {
-			// shape.position.x += 0.001;
 			scene.render();
 		});
 
@@ -66,6 +88,7 @@
 	});
 </script>
 
+<div id="fps">0</div>
 <div id="canvasZone"><canvas id="renderCanvas" /></div>
 
 <style>
@@ -82,5 +105,16 @@
 		width: 100%;
 		height: 100%;
 		touch-action: none;
+	}
+
+	#fps {
+		position: absolute;
+		background-color: #464e56;
+		border: 1px solid black;
+		text-align: center;
+		color: white;
+		top: 100px;
+		right: 20px;
+		padding: 5px;
 	}
 </style>

@@ -1,7 +1,5 @@
 <script>
 	import Navbar from '../components/Navbar.svelte';
-	export const prerender = true;
-	// export const trailingSlash = 'always';
 </script>
 
 <Navbar />
@@ -39,6 +37,7 @@
 		background-color: var(--background);
 		transition: var(--transition-time);
 		color: var(--text);
+
 		font-size: 1.6rem;
 	}
 </style>

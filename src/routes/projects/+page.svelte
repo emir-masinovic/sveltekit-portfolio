@@ -1,17 +1,25 @@
 <script>
 	import Card from '../../components/Card.svelte';
+	import babylon from '../../images/babylon.jpg';
 	import calculator from '../../images/calculator.jpg';
 	import clock from '../../images/clock.jpg';
-	import clicker from '../../images/clicker.jpg';
-	import feedback from '../../images/feedback.jpg';
+	// import clicker from '../../images/clicker.jpg';
+	import movieRatings from '../../images/movieRatings.jpg';
 	import parallax from '../../images/parallax.jpg';
 	import pokemon from '../../images/pokemon.jpg';
-	import flow from '../../images/flow.jpg';
-	import ttt from '../../images/ttt.jpg';
-	import babylon from '../../images/babylon.jpg';
+	// import flow from '../../images/flow.jpg';
+	// import ttt from '../../images/ttt.jpg';
 </script>
 
 <div class="project-container">
+	<Card
+		title="Go Cube"
+		imageSource={babylon}
+		bodyContent="3D graphics with Babylonjs"
+		buttonText="Play"
+		buttonLink="/projects/babylonium"
+	/>
+
 	<Card
 		title="Calculator"
 		imageSource={calculator}
@@ -26,17 +34,17 @@
 		buttonText="Link"
 		buttonLink="/projects/clock"
 	/>
-	<Card
+	<!-- <Card
 		title="Clicker"
 		imageSource={clicker}
 		bodyContent="Clickity-clack!"
 		buttonText="Play"
 		buttonLink="/projects/clicker"
-	/>
+	/> -->
 	<Card
-		title="Feedback Ratings"
-		imageSource={feedback}
-		bodyContent="Rate a movie!"
+		title="Movie Ratings"
+		imageSource={movieRatings}
+		bodyContent=""
 		buttonText="Link"
 		buttonLink="/projects/ratings"
 	/>
@@ -48,13 +56,13 @@
 		buttonLink="/parallax-effect/parallax.html"
 	/>
 	<Card
-		title="Pokemon"
+		title="Pokedex"
 		imageSource={pokemon}
-		bodyContent="Pokedex, but without images"
+		bodyContent=""
 		buttonText="Link"
 		buttonLink="/projects/pokemon"
 	/>
-	<Card
+	<!-- <Card
 		title="FLOW"
 		imageSource={flow}
 		bodyContent="Background flow"
@@ -67,15 +75,7 @@
 		bodyContent="Work in progress"
 		buttonText="Play"
 		buttonLink="/projects/tictactoe"
-	/>
-
-	<Card
-		title="Babylon"
-		imageSource={babylon}
-		bodyContent="Work in progress"
-		buttonText="Play"
-		buttonLink="/projects/babylonium"
-	/>
+	/> -->
 </div>
 
 <style>

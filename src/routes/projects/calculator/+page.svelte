@@ -1,25 +1,27 @@
 <script>
+	import { onMount } from 'svelte';
+
 	const buttons = [
-		{ text: 'AC', className: 'btn-clear' },
-		{ text: '√', className: 'btn-operation' },
-		{ text: 'x²', className: 'btn-operation' },
-		{ text: '%', className: 'btn-operation' },
-		{ text: '7', className: 'btn-number' },
-		{ text: '8', className: 'btn-number' },
-		{ text: '9', className: 'btn-number' },
-		{ text: '÷', className: 'btn-operation' },
-		{ text: '4', className: 'btn-number' },
-		{ text: '5', className: 'btn-number' },
-		{ text: '6', className: 'btn-number' },
-		{ text: '×', className: 'btn-operation' },
-		{ text: '1', className: 'btn-number' },
-		{ text: '2', className: 'btn-number' },
-		{ text: '3', className: 'btn-number' },
-		{ text: '-', className: 'btn-operation' },
-		{ text: '0', className: 'btn-number' },
-		{ text: '.', className: 'btn-number' },
-		{ text: '=', className: 'btn-equals' },
-		{ text: '+', className: 'btn-operation' }
+		{ text: 'AC', which: '65', className: 'btn-clear' },
+		{ text: '√', which: '192', className: 'btn-operation' },
+		{ text: 'x²', which: '88', className: 'btn-operation' },
+		{ text: '%', which: '53', className: 'btn-operation' },
+		{ text: '7', which: '55', className: 'btn-number' },
+		{ text: '8', which: '56', className: 'btn-number' },
+		{ text: '9', which: '57', className: 'btn-number' },
+		{ text: '÷', which: '191', className: 'btn-operation' },
+		{ text: '4', which: '52', className: 'btn-number' },
+		{ text: '5', which: '53', className: 'btn-number' },
+		{ text: '6', which: '54', className: 'btn-number' },
+		{ text: '×', which: '56', className: 'btn-operation' },
+		{ text: '1', which: '49', className: 'btn-number' },
+		{ text: '2', which: '50', className: 'btn-number' },
+		{ text: '3', which: '51', className: 'btn-number' },
+		{ text: '-', which: '189', className: 'btn-operation' },
+		{ text: '0', which: '48', className: 'btn-number' },
+		{ text: '.', which: '190', className: 'btn-number' },
+		{ text: '=', which: '187', className: 'btn-equals' },
+		{ text: '+', which: '69', className: 'btn-operation' }
 	];
 
 	let inputArray = '';
@@ -118,6 +120,12 @@
 			console.log('Inside error block: ', err.message);
 		}
 	}
+
+	onMount(() => {
+		window.addEventListener('keydown', handleKey);
+	});
+
+	function handleKey(event) {}
 </script>
 
 <div class="calculator-container">
@@ -149,6 +157,7 @@
 		display: flex;
 		flex-direction: column;
 		gap: 10px;
+		border-radius: 5px;
 		box-shadow: rgba(0, 0, 0, 0.1) 0 -23px 25px 0 inset, rgba(0, 0, 0, 0.15) 0 -36px 30px 0 inset,
 			rgba(0, 0, 0, 0.1) 0 -79px 40px 0 inset, rgba(0, 0, 0, 0.06) 0 2px 1px,
 			rgba(0, 0, 0, 0.09) 0 4px 2px, rgba(0, 0, 0, 0.09) 0 8px 4px, rgba(0, 0, 0, 0.09) 0 16px 8px,
@@ -164,6 +173,7 @@
 	.casio-black {
 		width: 30%;
 		background: rgba(0, 0, 0, 0.7);
+		border-radius: 8px;
 	}
 
 	.display {
@@ -189,6 +199,7 @@
 		color: rgba(255, 255, 255, 0.8);
 		background-color: rgba(0, 0, 0, 0.7);
 		border: none;
+		border-radius: 3px;
 		user-select: none;
 		cursor: pointer;
 		text-align: center;

@@ -1,5 +1,5 @@
 <script>
-	import logo from '../images/baklava.svg';
+	import logo from '../images/diamond.svg';
 	import sun from '../images/sun.svg';
 	import moon from '../images/moon.svg';
 	import { page } from '$app/stores';
@@ -36,7 +36,9 @@
 </script>
 
 <nav class="navbar">
-	<img alt="Logo" src={logo} />
+	<a href="https://github.com/emir-masinovic">
+		<img alt="Logo" src={logo} />
+	</a>
 	<ul class="navbar-links">
 		<li>
 			<a href="/" class={activePage === '/' ? 'active' : ''} on:click={handleNavLinkClick}>Home</a>

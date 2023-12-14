@@ -206,6 +206,7 @@
 		border: 1px solid black;
 		outline: none;
 		padding: 5px;
+		font-size: 1.6rem;
 	}
 
 	.ratings-form-group button {
@@ -233,6 +234,7 @@
 
 	.warning-message {
 		text-align: center;
+		color: red;
 	}
 
 	.ratings-body {

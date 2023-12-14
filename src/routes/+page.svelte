@@ -4,10 +4,18 @@
 </script>
 
 <div class="home-container">
-	<div class="home-item"><img src={emir} alt="" class="img-fluid" /></div>
 	<div class="home-item">
 		<h1>Emir Masinovic</h1>
-		<p>I'm working on combining website development and computer graphics.</p>
+		<p>Web Dev and computer graphics enthusiast</p>
+		<br />
+		<img src={emir} alt="" class="profile-picture" />
+	</div>
+	<div class="home-item">
+		<img
+			src="https://readme-typing-svg.demolab.com?font=Poppins&size=20	&duration=3000&pause=1000&color=944CF7&center=true&random=false&width=320&lines=Spin+that+cube!;Rotate+with+WASD;or+the+arrow+keys.;Double+speed+%3A+%2B;Halve+speed%3A+-;Reset%3A+R;Pause%3A+space;Random+colors%3A+T"
+			alt="Typing SVG"
+			class="svg-text"
+		/>
 		<Cube />
 	</div>
 </div>
@@ -17,13 +25,17 @@
 		display: flex;
 		flex-direction: column;
 		padding: 20px;
-		gap: 20px;
+		gap: 40px;
 		text-align: center;
 	}
 
-	.img-fluid {
+	.profile-picture {
 		border-radius: 100%;
 		width: 80%;
+	}
+
+	.svg-text {
+		margin-bottom: -20px;
 	}
 
 	@media (min-width: 600px) {
@@ -34,11 +46,13 @@
 			justify-content: center;
 			gap: 0;
 		}
+		.profile-picture {
+			width: clamp(200px, 70%, 450px);
+		}
+	}
+	@media (min-width: 1200px) {
 		.home-item {
 			width: 40%;
-		}
-		.img-fluid {
-			width: clamp(200px, 70%, 450px);
 		}
 	}
 </style>

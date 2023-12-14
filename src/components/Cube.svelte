@@ -1,31 +1,17 @@
 <script>
 	import { onMount } from 'svelte';
 
-	// Cube div for HTML and Properties for JS manipulation
 	let cubeDiv;
 	let cubeProperties = { x: 0, y: 0, xSpeed: 0, ySpeed: 0 };
 	let intervalId = null;
-
-	let intervalDelay = 10;
-	/*
-    This is tricky, and it handles rendering, so to speak.
-    The lower the intervalDelay, the more it taxes devices in the setInterval.
-
-    30 FPS is 33.33333 MS
-    60 FPS is 16.66666 MS
-    90 FPS is 11.11111 MS
-    120 FPS is 8.333333 MS
-    140 FPS is 7.142857 MS
-    144 FPS is 6.944444 MS
-    180 FPS is 5.555555 MS
-    240 FPS is 4.166666 MS
-    */
-
-	// Adds speed instead of multiplying it with itself
+	const intervalDelay = 10;
 	const speedAddRemove = 0.2;
 
 	// Svelte has problems if adding events before page loads
 	onMount(() => {
+		rotate('right');
+		rotate('up');
+		slowDown();
 		window.addEventListener('keydown', handleKeyPress);
 
 		function handleKeyPress(event) {
@@ -83,27 +69,20 @@
 		}
 	});
 
-	// Because CSS properties are being manipulated directly from the JS,
-	// huge numbers can be put into transform property so this keeps it in check
 	function normalizeRotation(degrees) {
-		// Normalize degrees to be between 0 and 360
 		return ((degrees % 360) + 360) % 360;
 	}
 
-	// Still don't fully understand what's going on here
 	function rotateCube() {
 		if (intervalId !== null) clearInterval(intervalId);
 
 		intervalId = setInterval(function () {
-			// Update rotation speeds
 			cubeProperties.x += cubeProperties.ySpeed * 360 * (intervalDelay / 1000);
 			cubeProperties.y += cubeProperties.xSpeed * 360 * (intervalDelay / 1000);
 
-			// Normalize rotation angles to keep them within 0 to 360 degrees
 			cubeProperties.x = normalizeRotation(cubeProperties.x);
 			cubeProperties.y = normalizeRotation(cubeProperties.y);
 
-			// Apply normalized rotation angles to the cube's style
 			try {
 				cubeDiv.style.transform = `rotateX(${cubeProperties.x}deg) rotateY(${cubeProperties.y}deg)`;
 			} catch (error) {
@@ -175,15 +154,15 @@
 </div>
 
 <div class="buttons">
-	<button on:click={() => rotate('up')}>&uarr;</button>
-	<button on:click={() => rotate('left')}>&larr;</button>
-	<button on:click={() => rotate('right')}>&rarr;</button>
-	<button on:click={() => rotate('down')}>&darr;</button>
-	<button on:click={speedUp}>&#8811;</button>
-	<button on:click={slowDown}>&#8810;</button>
+	<button on:click={() => rotate('up')}>w &uarr;</button>
+	<button on:click={() => rotate('left')}>&larr; a</button>
+	<button on:click={() => rotate('right')}>d &rarr;</button>
+	<button on:click={() => rotate('down')}>s &darr;</button>
+	<button on:click={slowDown}>&#8810; -</button>
 	<button on:click={pauseResume}>&#9208</button>
-	<button on:click={randomize}>🎲</button>
-	<button on:click={reset}>Reset</button>
+	<button on:click={speedUp}>+ &#8811;</button>
+	<button on:click={randomize}>🎲 T<br /> </button>
+	<button on:click={reset}><span style="text-decoration: underline;">R</span>eset</button>
 </div>
 
 <style>
@@ -195,7 +174,7 @@
 			'down down down down down'
 			'. . . . .'
 			'slowDown slowDown stop speedUp speedUp'
-			'randomize randomize fps fps fps';
+			'randomize randomize reset reset reset';
 		gap: 10px;
 		justify-content: center;
 	}
@@ -236,15 +215,15 @@
 	}
 
 	.buttons > button:nth-child(5) {
-		grid-area: speedUp;
-	}
-
-	.buttons > button:nth-child(6) {
 		grid-area: slowDown;
 	}
 
-	.buttons > button:nth-child(7) {
+	.buttons > button:nth-child(6) {
 		grid-area: stop;
+	}
+
+	.buttons > button:nth-child(7) {
+		grid-area: speedUp;
 	}
 
 	.buttons > button:nth-child(8) {
@@ -252,7 +231,7 @@
 	}
 
 	.buttons > button:nth-child(9) {
-		grid-area: fps;
+		grid-area: reset;
 	}
 
 	.cube {

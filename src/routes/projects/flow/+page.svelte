@@ -1,47 +1,62 @@
-<!-- <script>
+<script>
 	import { onMount } from 'svelte';
-	import * as THREE from 'three';
+	import * as BABYLON from '@babylonjs/core';
+	import Havok from '@babylonjs/havok';
+	import { HavokPlugin } from '@babylonjs/core/Physics/v2/Plugins/havokPlugin';
 
-	let scene, camera, renderer, circle;
+	onMount(async () => {
+		let canvas = document.getElementById('renderCanvas');
+		const engine = new BABYLON.Engine(canvas, true); // Generate the BABYLON 3D engine
+		let preTasks = [Havok];
+		const createScene = async function () {
+			const scene = new BABYLON.Scene(engine);
+			const camera = new BABYLON.FreeCamera('camera1', new BABYLON.Vector3(0, 5, -10), scene);
+			camera.setTarget(BABYLON.Vector3.Zero());
+			camera.attachControl(canvas, true);
+			const light = new BABYLON.HemisphericLight('light', new BABYLON.Vector3(0, 1, 0), scene);
+			light.intensity = 0.7;
+			const sphere = BABYLON.MeshBuilder.CreateSphere(
+				'sphere',
+				{ diameter: 2, segments: 32 },
+				scene
+			);
+			sphere.position.y = 1;
+			const ground = BABYLON.MeshBuilder.CreateGround('ground', { width: 6, height: 6 }, scene);
 
-	onMount(() => {
-		// Set up scene
-		scene = new THREE.Scene();
+			// const gravity = new BABYLON.Vector3(0, -10, 0);
+			// const hk = await Havok();
+			// const babylonPlugin = new BABYLON.HavokPlugin(true, hk);
+			// scene.enablePhysics(gravity, babylonPlugin);
+			return scene;
+		};
 
-		// Set up camera
-		camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-		camera.position.z = 5;
+		const scene = await createScene();
 
-		// Set up renderer
-		renderer = new THREE.WebGLRenderer();
-		renderer.setSize(window.innerWidth, window.innerHeight - 80);
-		document.body.appendChild(renderer.domElement);
+		engine.runRenderLoop(function () {
+			scene.render();
+		});
 
-		// Create yellow circle
-		const geometry = new THREE.CircleGeometry(1, 32);
-		const material = new THREE.MeshBasicMaterial({ color: 0xffff00 });
-		circle = new THREE.Mesh(geometry, material);
-		scene.add(circle);
-
-		// Render the scene
-		animate();
+		window.addEventListener('resize', function () {
+			engine.resize();
+		});
 	});
-
-	function animate() {
-		requestAnimationFrame(animate);
-
-		// Rotate the circle
-		// circle.rotation.x += 0.01;
-		// circle.rotation.y += 0.01;
-
-		// Render the scene
-		renderer.render(scene, camera);
-	}
 </script>
 
+<div id="canvasZone"><canvas id="renderCanvas" /></div>
+
 <style>
-	canvas {
-		width: 100%;
+	:global(body) {
 		height: calc(100vh - 80px);
 	}
-</style> -->
+	#canvasZone {
+		width: 100vw;
+		height: 100%;
+		overflow: hidden;
+	}
+
+	#renderCanvas {
+		width: 100%;
+		height: 100%;
+		touch-action: none;
+	}
+</style>
