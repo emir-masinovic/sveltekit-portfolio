@@ -5,7 +5,6 @@
 	import clock from '../../images/clock.jpg';
 	// import clicker from '../../images/clicker.jpg';
 	import movieRatings from '../../images/movieRatings.jpg';
-	import parallax from '../../images/parallax.jpg';
 	import pokemon from '../../images/pokemon.jpg';
 	// import flow from '../../images/flow.jpg';
 	// import ttt from '../../images/ttt.jpg';
@@ -47,13 +46,6 @@
 		bodyContent=""
 		buttonText="Link"
 		buttonLink="/projects/ratings"
-	/>
-	<Card
-		title="Parallax Effect"
-		imageSource={parallax}
-		bodyContent="Illusion of depth"
-		buttonText="Link"
-		buttonLink="/parallax-effect/parallax.html"
 	/>
 	<Card
 		title="Pokedex"
