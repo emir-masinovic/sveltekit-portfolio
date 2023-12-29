@@ -4,7 +4,7 @@
 	// import * as Material from '@babylonjs/materials';
 	import '@babylonjs/loaders/';
 	// import * as GUI from '@babylonjs/gui';
-	import * as CANNON from 'cannon';
+	// import * as CANNON from 'cannon';
 
 	import { createArcRotateCamera, createFreeCamera } from '$lib/cameras.js';
 	import { createGround } from '$lib/ground.js';
@@ -26,10 +26,11 @@
 		engine = new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true });
 		engine.displayLoadingUI();
 		scene = new BABYLON.Scene(engine);
-		scene.enablePhysics(
-			new BABYLON.Vector3(0, -9.81, 0),
-			new BABYLON.CannonJSPlugin(undefined, undefined, CANNON)
-		);
+		// scene.enablePhysics(
+		// 	new BABYLON.Vector3(0, -9.81, 0),
+		// 	new BABYLON.CannonJSPlugin(undefined, undefined, CANNON)
+		// );
+		scene.enablePhysics(new BABYLON.Vector3(0, -9.81, 0), new BABYLON.CannonJSPlugin());
 		scene.collisionsEnabled = true;
 		// scene.useRightHandedSystem = true;
 
