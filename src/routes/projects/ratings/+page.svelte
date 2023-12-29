@@ -120,8 +120,16 @@
 </div>
 
 <style>
+	:root {
+		--ratings-background: #343a40;
+	}
+
+	:global(.light-theme) {
+		--ratings-background: #ebd8c3;
+	}
+
 	.ratings-container {
-		padding: 10px;
+		padding: 20px;
 		display: flex;
 		flex-direction: column;
 	}
@@ -132,7 +140,7 @@
 		gap: 5px;
 		flex-direction: column;
 		color: var(--text);
-		background-color: var(--navbar);
+		background-color: var(--ratings-background);
 		border: 1px solid var(--border);
 		text-align: center;
 		transition: var(--transition-time);
@@ -246,12 +254,12 @@
 	.ratings-footer {
 		display: flex;
 		flex-direction: column;
-		gap: 5px;
+		gap: 10px;
 	}
 
 	.review-card {
 		position: relative;
-		background-color: var(--navbar);
+		background-color: var(--ratings-background);
 		color: var(--text);
 		padding: 30px;
 		border: 1px solid var(--border);
@@ -261,12 +269,13 @@
 
 	.review-card-rating {
 		position: absolute;
-		top: -1px;
-		left: -1px;
+		top: 0;
+		left: 0;
 		width: 30px;
 		height: 30px;
 		text-align: center;
-		border: 1px solid var(--border);
+		border-right: 1px solid var(--border);
+		border-bottom: 1px solid var(--border);
 		background-color: var(--background);
 		transition: 0.3s;
 	}
@@ -316,7 +325,7 @@
 		}
 	}
 
-	@media (min-width: 420px) {
+	@media (min-width: 440px) {
 		.ratings-form-list {
 			display: grid;
 			grid-template-columns: repeat(10, 1fr);

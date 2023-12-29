@@ -128,30 +128,34 @@
 	function handleKey(event) {}
 </script>
 
-<div class="calculator-container">
-	<div class="calculator-header">
-		<div>CASIO</div>
-		<div class="casio-black" />
-	</div>
-	<div class="calculator-body">
-		<div class="display">{display}</div>
-	</div>
-	<div class="calculator-footer">
-		<div class="buttons-container">
-			{#each buttons as { text, className }}
-				<button class={className} on:pointerdown={handleButton}>{text}</button>
-			{/each}
+<div class="position-container">
+	<div class="calculator-container">
+		<div class="calculator-header">
+			<div>CASIO</div>
+			<div class="casio-black" />
+		</div>
+		<div class="calculator-body">
+			<div class="display">{display}</div>
+		</div>
+		<div class="calculator-footer">
+			<div class="buttons-container">
+				{#each buttons as { text, className }}
+					<button class={className} on:pointerdown={handleButton}>{text}</button>
+				{/each}
+			</div>
 		</div>
 	</div>
 </div>
 
 <style>
+	.position-container {
+		display: flex;
+		height: calc(100dvh - 80px);
+	}
 	.calculator-container {
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%);
-		width: 90%;
+		margin: auto;
+		height: fit-content;
+		width: fit-content;
 		padding: 20px;
 		background-color: rgb(128, 128, 128);
 		display: flex;
@@ -195,7 +199,7 @@
 
 	.buttons-container button {
 		height: 60px;
-		/*padding: 5px;*/
+		width: 60px;
 		color: rgba(255, 255, 255, 0.8);
 		background-color: rgba(0, 0, 0, 0.7);
 		border: none;
@@ -210,15 +214,5 @@
 
 	.buttons-container button:active {
 		background-color: rgba(0, 0, 0, 0.5);
-	}
-
-	@media (min-width: 576px) {
-		.calculator-container {
-			width: 500px;
-			/*font-size: 2rem;*/
-		}
-
-		/*.buttons-container button {*/
-		/*}*/
 	}
 </style>

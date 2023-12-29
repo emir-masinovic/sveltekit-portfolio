@@ -7,7 +7,7 @@ export const createPlayer = (scene) => {
 	playerBox.physicsImpostor = new BABYLON.PhysicsImpostor(
 		playerBox,
 		BABYLON.PhysicsImpostor.BoxImpostor,
-		{ mass: 0, friction: 10, restitution: 0 },
+		{ mass: 1, friction: 0.02, restitution: 0.2 },
 		scene
 	);
 	playerBox.checkCollisions = true;
@@ -19,20 +19,12 @@ export const createPlayer = (scene) => {
 	// playerMaterial.lineColor = BABYLON.Color3.FromHexString('#01FE0A');
 	playerBox.material = playerMaterial;
 
-	const localAxes = new BABYLON.AxesViewer(scene, 1);
-	localAxes.xAxis.parent = playerBox;
-	localAxes.yAxis.parent = playerBox;
-	localAxes.zAxis.parent = playerBox;
-
 	return playerBox;
 };
 
-function randomIntFromInterval(min, max) {
-	// min and max included
-	return Math.floor(Math.random() * (max - min + 1) + min);
-}
-
-const cloneCount = 10;
+// function randomIntFromInterval(min, max) {
+// 	return Math.floor(Math.random() * (max - min + 1) + min);
+// }
 
 export function createPlayerClones(maxClones, radius, player, scene) {
 	for (var i = 0; i < maxClones; i++) {
@@ -52,9 +44,9 @@ export function createPlayerClones(maxClones, radius, player, scene) {
 			clone,
 			BABYLON.PhysicsImpostor.BoxImpostor,
 			{
-				mass: 0,
-				friction: 10,
-				restitution: 0.1
+				mass: 1,
+				friction: 0.02,
+				restitution: 0.2
 			},
 			scene
 		);

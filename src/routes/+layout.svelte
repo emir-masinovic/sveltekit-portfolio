@@ -21,7 +21,7 @@
 		--background: #464e56;
 		--text: #fff;
 		--border: black;
-		--transition-time: 1s;
+		--transition-time: 0.6s;
 		font-size: 62.5%;
 	}
 
@@ -31,13 +31,9 @@
 	}
 
 	:global(body) {
-		width: 100%;
-		/*height: calc(100vh);*/
-		/*overflow: hidden;*/
 		background-color: var(--background);
 		transition: var(--transition-time);
 		color: var(--text);
-
 		font-size: 1.6rem;
 	}
 </style>

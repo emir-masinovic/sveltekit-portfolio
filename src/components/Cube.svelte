@@ -158,14 +158,24 @@
 	<button on:click={() => rotate('left')}>&larr; a</button>
 	<button on:click={() => rotate('right')}>d &rarr;</button>
 	<button on:click={() => rotate('down')}>s &darr;</button>
-	<button on:click={slowDown}>&#8810; -</button>
-	<button on:click={pauseResume}>&#9208</button>
-	<button on:click={speedUp}>+ &#8811;</button>
+	<button on:click={slowDown}>≪ -</button>
+	<button on:click={pauseResume}>| |</button>
+	<button on:click={speedUp}>+ ≫</button>
 	<button on:click={randomize}>🎲 T<br /> </button>
-	<button on:click={reset}><span style="text-decoration: underline;">R</span>eset</button>
+	<button on:click={reset}>↻</button>
 </div>
 
 <style>
+	:root {
+		--buttons-background: #343a40;
+		--buttons-hover: rgba(177, 177, 177, 0.5);
+	}
+
+	:global(.light-theme) {
+		--buttons-background: #ebd8c3;
+		--buttons-hover: rgba(73, 71, 71, 0.5);
+	}
+
 	.buttons {
 		display: grid;
 		grid-template-areas:
@@ -174,7 +184,7 @@
 			'down down down down down'
 			'. . . . .'
 			'slowDown slowDown stop speedUp speedUp'
-			'randomize randomize reset reset reset';
+			'randomize randomize randomize reset reset';
 		gap: 10px;
 		justify-content: center;
 	}
@@ -183,14 +193,14 @@
 		border: 1px solid black;
 		color: var(--text);
 		padding: 8px;
-		background-color: var(--navbar);
+		background-color: var(--buttons-background);
 		transition: var(--transition-time);
-		font-size: 1.8rem;
+		font-size: 2rem;
 	}
 
 	.buttons button:hover {
-		background-color: var(--link-faded);
-		color: var(--navbar);
+		background-color: var(--buttons-hover);
+		color: var(--buttons-background);
 		transition-duration: 0.3s;
 	}
 
@@ -288,9 +298,9 @@
 		background: rgba(255, 125, 125, 0.5);
 	}
 
-	/*@media (min-width: 700px) {*/
-	/*	.buttons button {*/
-	/*		padding: 5px;*/
-	/*	}*/
-	/*}*/
+	@media (min-width: 600px) {
+		.buttons button {
+			font-size: 1.6rem;
+		}
+	}
 </style>

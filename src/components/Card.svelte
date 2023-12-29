@@ -20,15 +20,21 @@
 </div>
 
 <style>
+	:root {
+		--card-background: #343a40;
+	}
+	:global(.light-theme) {
+		--card-background: #ebd8c3;
+	}
+
 	.card-container {
 		display: flex;
 		flex-direction: column;
 		justify-content: space-between;
 		width: 300px;
-		background: var(--navbar);
+		background: var(--card-background);
 		border: 1px solid black;
-		transition: 0.2s;
-		/*line-height: 1.5;*/
+		transition: background-color var(--transition-time);
 		font-size: 1.6rem;
 	}
 
@@ -42,7 +48,7 @@
 	}
 
 	.card-body {
-		height: 200px;
+		height: 100px;
 		padding: 5px 10px;
 		border-top: 1px solid black;
 	}
@@ -52,9 +58,9 @@
 		padding: 10px;
 	}
 
-	@media (min-width: 1200px) {
+	@media (min-width: 1600px) {
 		.card-body {
-			height: 160px;
+			height: 200px;
 		}
 	}
 </style>

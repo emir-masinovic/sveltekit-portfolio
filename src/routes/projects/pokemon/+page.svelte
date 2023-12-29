@@ -46,37 +46,39 @@
 	}
 </script>
 
-{#if loading}
-	<div class="spinner" />
-{:else}
-	<div class="pokemon-card">
-		<img src={pokemonTitle} alt="" />
+<div class="position-container">
+	{#if loading}
+		<div class="spinner" />
+	{:else}
+		<div class="pokemon-card">
+			<img src={pokemonTitle} alt="" />
 
-		<div class="pokemon-card-body">
-			{#each pokemon as p (p)}
-				<div class="pokemon-card-body-div">{capitalize(p)}</div>
-			{/each}
+			<div class="pokemon-card-body">
+				{#each pokemon as p (p)}
+					<div class="pokemon-card-body-div">{capitalize(p)}</div>
+				{/each}
+			</div>
+			<div class="pokemon-card-buttons">
+				{#if prevPageUrl !== null}
+					<button on:click={() => loadPage(prevPageUrl)}>Previous</button>
+				{/if}
+				{#if nextPageUrl !== null}
+					<button on:click={() => loadPage(nextPageUrl)}>Next</button>
+				{/if}
+			</div>
 		</div>
-		<div class="pokemon-card-buttons">
-			{#if prevPageUrl !== null}
-				<button on:click={() => loadPage(prevPageUrl)}>Previous</button>
-			{/if}
-			{#if nextPageUrl !== null}
-				<button on:click={() => loadPage(nextPageUrl)}>Next</button>
-			{/if}
-		</div>
-	</div>
-{/if}
+	{/if}
+</div>
 
 <style>
 	@import url('https://fonts.cdnfonts.com/css/pokemon-solid');
 
+	.position-container {
+		display: flex;
+		height: calc(100dvh - 80px);
+	}
+
 	.spinner {
-		position: absolute;
-		left: 0;
-		right: 0;
-		top: 0;
-		bottom: 0;
 		margin: auto;
 		width: 80px;
 		height: 80px;
@@ -97,11 +99,6 @@
 
 	.pokemon-card {
 		--border-pokemon: #0a285f;
-		position: absolute;
-		left: 0;
-		right: 0;
-		top: 0;
-		bottom: 0;
 		margin: auto;
 		width: fit-content;
 		height: fit-content;

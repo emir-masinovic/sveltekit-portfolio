@@ -1,18 +1,21 @@
 <script>
 	import logo from '../images/diamond.svg';
-	import sun from '../images/sun.svg';
-	import moon from '../images/moon.svg';
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
 
-	let isLightTheme = false;
 	let activePage = '';
+	let isMenuActive = false;
+	let isLightTheme = false;
 
 	onMount(() => {
 		activePage = $page.url.pathname;
 		isLightTheme = localStorage.getItem('theme') === 'light';
 		updateTheme();
 	});
+
+	function toggleMenu() {
+		isMenuActive = !isMenuActive;
+	}
 
 	function toggleTheme() {
 		isLightTheme = !isLightTheme;
@@ -21,27 +24,38 @@
 	}
 
 	function updateTheme() {
+		const favicon = document.querySelector('[rel=icon]');
 		if (isLightTheme) {
+			favicon.setAttribute('href', '/faviconLight.svg');
 			document.body.classList.add('light-theme');
 		} else {
+			favicon.setAttribute('href', '/favicon.svg');
 			document.body.classList.remove('light-theme');
 		}
 	}
 
 	function handleNavLinkClick(event) {
-		const links = document.querySelectorAll('.navbar-links li a');
+		const links = document.querySelectorAll('nav ul li a');
 		links.forEach((link) => link.classList.remove('active'));
 		event.target.classList.add('active');
 	}
 </script>
 
-<nav class="navbar">
-	<a href="https://github.com/emir-masinovic">
+<nav>
+	<button id="hamburger-button" on:click={toggleMenu}>≡</button>
+
+	<a class="logo" href="https://github.com/emir-masinovic">
 		<img alt="Logo" src={logo} />
 	</a>
-	<ul class="navbar-links">
+
+	<ul class:active={isMenuActive}>
 		<li>
-			<a href="/" class={activePage === '/' ? 'active' : ''} on:click={handleNavLinkClick}>Home</a>
+			<a
+				href="/"
+				class={activePage === '/' ? 'active' : ''}
+				on:click={handleNavLinkClick}
+				on:click={toggleMenu}>Home</a
+			>
 		</li>
 		<li>
 			<a
@@ -50,97 +64,204 @@
 					? 'active'
 					: ''}
 				on:click={handleNavLinkClick}
-				>Projects
-			</a>
+				on:click={toggleMenu}>Projects</a
+			>
 		</li>
 		<li>
 			<a
 				href="/contact"
 				class={activePage === '/contact' ? 'active' : ''}
 				on:click={handleNavLinkClick}
-				>Contact
-			</a>
+				on:click={toggleMenu}>Contact</a
+			>
 		</li>
 	</ul>
-	<button class="toggle-theme" on:click={toggleTheme}>
-		{#if isLightTheme}
-			<img alt="Moon" src={moon} class="moon" />
-		{:else}
-			<img alt="Sun" src={sun} class="sun" />
-		{/if}
+	<button id="theme-button" on:click={toggleTheme}>
+		<div />
 	</button>
 </nav>
 
 <style>
 	:root {
-		--navbar: #343a40;
-		--link-faded: rgba(177, 177, 177, 0.5);
-		--link-hover: rgba(234, 234, 234, 0.75);
 		--logo: invert(1);
+		--navbar-background: #343a40;
+		--hamburger-hover: white;
+		--theme-button-background: #7b7b7b;
+		--theme-button-border: 1px solid #464e56;
+		--theme-button-border-hover: 1px solid #e6e6e6;
+		--theme-button-position: translate(2px, 0%);
+		--theme-button-div-background: #464e56;
+		--theme-button-icon: url('../images/sun.svg');
 	}
 
 	:global(.light-theme) {
-		--navbar: #ebd8c3;
-		--link-faded: rgba(0, 0, 0, 0.5);
-		--link-hover: rgba(21, 21, 21, 0.9);
 		--logo: invert(0);
+		--navbar-background: #ebd8c3;
+		--hamburger-hover: black;
+		--theme-button-background: #fff6ea;
+		--theme-button-border: 1px solid #b0b0b0;
+		--theme-button-border-hover: 1px solid #212121;
+		--theme-button-position: translate(30px, 0%);
+		--theme-button-div-background: #ebd8c3;
+		--theme-button-icon: url('../images/moon.svg');
 	}
 
-	.navbar {
-		display: flex;
+	nav {
+		position: fixed;
+		z-index: 100;
 		height: 80px;
+		margin-top: -80px;
+		width: 100%;
+		padding: 0 20px;
+		display: flex;
 		justify-content: space-between;
-		padding: 0 20px 0 20px;
-		align-items: center;
-		border-bottom: 1px solid var(--border);
-		background-color: var(--navbar);
+		background-color: var(--navbar-background);
 		transition: var(--transition-time);
+		box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.75);
 	}
 
-	.navbar img {
+	:global(body) {
+		margin-top: 80px;
+	}
+
+	.logo {
+		display: none;
 		filter: var(--logo);
 		transition: var(--transition-time);
-		scale: 1.2;
+		width: 20px;
+		height: 20px;
+		align-self: center;
 	}
 
-	.navbar-links {
-		display: flex;
-		gap: 20px;
-		font-size: 1.8rem;
-		list-style: none;
+	.logo img {
+		height: 100%;
+		width: 100%;
 	}
 
-	.navbar-links li a {
-		align-items: center;
-		color: var(--link-faded);
-		text-decoration: none;
-		transition: var(--transition-time);
-		font-weight: bold;
+	.logo:hover {
+		rotate: 90deg;
 	}
 
-	.navbar-links li a:hover {
-		color: var(--link-hover);
-	}
-
-	.navbar-links li a.active {
-		color: var(--text);
-		font-weight: bold;
-	}
-
-	.toggle-theme {
-		display: flex;
+	#hamburger-button {
+		height: fit-content;
+		align-self: center;
+		font-size: 40px;
+		height: fit-content;
 		padding: 5px;
-		border: 1px solid var(--text);
-		border-radius: 100%;
-		scale: 1.2;
-		background-color: transparent;
+		border: none;
 		cursor: pointer;
+		color: var(--text);
+		transition: var(--transition-time);
+		background-color: var(--navbar-background);
+	}
+
+	#hamburger-button:hover {
+		color: var(--hamburger-hover);
+	}
+
+	#theme-button {
+		height: 30px;
+		width: 60px;
+		align-self: center;
+		cursor: pointer;
+		border-radius: 15px;
+		border: var(--theme-button-border);
+		transition: border 0.3s, background-color var(--transition-time);
+		background-color: var(--theme-button-background);
+	}
+
+	#theme-button:hover {
+		border: var(--theme-button-border-hover);
+	}
+
+	#theme-button div {
+		height: 26px;
+		width: 26px;
+		padding: 4px;
+		border-radius: 50%;
+		transition: 0.5s ease-out;
+		content: var(--theme-button-icon);
+		transform: var(--theme-button-position);
+		background-color: var(--theme-button-div-background);
+	}
+
+	nav ul {
+		position: fixed;
+		inset: 0;
+		z-index: 100;
+		height: calc(100% - 80px);
+		transform: translate(0%, -100%);
+		display: flex;
+		flex-direction: column;
+		gap: 20px;
+		justify-content: center;
+		text-align: center;
+		list-style: none;
+		background-color: var(--background);
 		transition: var(--transition-time);
 	}
 
-	.toggle-theme:hover {
-		background-color: var(--background);
-		filter: invert(1);
-		scale: 1.1;
+	nav ul.active {
+		transform: translate(0%, 80px);
+	}
+
+	nav ul li a {
+		font-size: 3rem;
+		padding: 5px;
+		color: var(--text);
+		text-decoration: none;
+		background: linear-gradient(var(--text), var(--text));
+		background-size: 0% 1px;
+		background-position: 50% 100%;
+		background-repeat: no-repeat;
+		transition: background-size 0.5s, color var(--transition-time);
+	}
+
+	nav ul li a:hover {
+		background-size: 100% 0.1em;
+	}
+
+	nav ul li a.active {
+		color: red;
+		background: linear-gradient(red, red);
+		background-size: 0% 1px;
+		background-position: 50% 100%;
+		background-repeat: no-repeat;
+		transition: background-size 0.5s;
+	}
+
+	nav ul li a.active:hover {
+		background-size: 100% 0.1em;
+	}
+
+	@media (min-width: 700px) {
+		:global(body) {
+			margin-top: 0;
+		}
+		nav {
+			position: initial;
+			margin-top: 0;
+		}
+		nav ul,
+		nav ul.active {
+			position: initial;
+			flex-direction: row;
+			height: 100%;
+			gap: 10px;
+			align-items: center;
+			transform: translate(0%);
+			background-color: var(--navbar-background);
+		}
+		nav ul li a {
+			font-size: 2rem;
+		}
+
+		#hamburger-button {
+			display: none;
+		}
+
+		.logo {
+			display: initial;
+		}
 	}
 </style>

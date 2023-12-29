@@ -1,10 +1,10 @@
 <script>
 	import { onMount } from 'svelte';
 	import * as BABYLON from '@babylonjs/core';
-	// import * as BABYLON from '@babylonjs/core/Legacy/legacy';
 	// import * as Material from '@babylonjs/materials';
 	import '@babylonjs/loaders/';
-	// import { AdvancedDynamicTexture } from '@babylonjs/gui';
+	// import * as GUI from '@babylonjs/gui';
+	import * as CANNON from 'cannon';
 
 	import { createArcRotateCamera, createFreeCamera } from '$lib/cameras.js';
 	import { createGround } from '$lib/ground.js';
@@ -18,15 +18,18 @@
 	async function createScene() {
 		let divFps = document.getElementById('fps');
 
-		// const gui = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI('gui', true, scene);
-		// void gui.parseFromSnippetAsync('1F2VJQ');
-		// let loadedGui = await AdvancedDynamicTexture.ParseFromURLAsync('/menu.json');
+		// let advancedTexture = new GUI.AdvancedDynamicTexture('adt', 128, 128, scene);
+		// advancedTexture.parseFromSnippetAsync('1F2VJQ');
+		// let loadedGui = await GUI.AdvancedDynamicTexture.ParseFromFileAsync('/menu.json', true);
 
 		let canvas = document.getElementById('renderCanvas');
 		engine = new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true });
 		engine.displayLoadingUI();
 		scene = new BABYLON.Scene(engine);
-		scene.enablePhysics(new BABYLON.Vector3(0, -9.81, 0), new BABYLON.CannonJSPlugin());
+		scene.enablePhysics(
+			new BABYLON.Vector3(0, -9.81, 0),
+			new BABYLON.CannonJSPlugin(undefined, undefined, CANNON)
+		);
 		scene.collisionsEnabled = true;
 		// scene.useRightHandedSystem = true;
 
@@ -59,15 +62,15 @@
 
 		const maxClones = 10;
 		const radius = 10;
-		createPlayerClones(maxClones * 5, radius, player, scene);
-		// createPlayerClones(20, 20, player, scene);
-		// createPlayerClones(30, 30, player, scene);
+		// createPlayerClones(maxClones * 4, radius, player, scene);
+		// createPlayerClones(maxClones * 8, radius * 2, player, scene);
+		// createPlayerClones(maxClones * 16, radius * 4, player, scene);
 
 		importMesh(scene);
 
 		scene.registerBeforeRender(() => {
 			// console.log(player);
-			divFps.innerText = engine.getFps().toFixed() + ' fps';
+			divFps.innerText = engine.getFps().toFixed();
 			if (player.position.y < -100) player.position = new BABYLON.Vector3(0, 0, 0);
 		});
 
@@ -88,16 +91,16 @@
 	});
 </script>
 
-<div id="fps">0</div>
+<div class="fps-container">
+	<div>FPS:</div>
+	<div id="fps" />
+</div>
 <div id="canvasZone"><canvas id="renderCanvas" /></div>
 
 <style>
-	:global(body) {
-		height: calc(100vh - 80px);
-	}
 	#canvasZone {
-		width: 100vw;
-		height: 100%;
+		width: 100%;
+		height: calc(100vh - 80px);
 		overflow: hidden;
 	}
 
@@ -107,14 +110,16 @@
 		touch-action: none;
 	}
 
-	#fps {
+	.fps-container {
 		position: absolute;
+		display: flex;
+		gap: 3px;
 		background-color: #464e56;
 		border: 1px solid black;
-		text-align: center;
 		color: white;
 		top: 100px;
-		right: 20px;
+		left: 20px;
 		padding: 5px;
+		width: 70px;
 	}
 </style>

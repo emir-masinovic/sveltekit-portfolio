@@ -50,6 +50,16 @@
 </div>
 
 <style>
+	:root {
+		--clock-background: #343a40;
+		--clock-hour-lines: #464e56;
+	}
+
+	:global(.light-theme) {
+		--clock-background: #ebd8c3;
+		--clock-hour-lines: #fff6ea;
+	}
+
 	.clock-container {
 		height: calc(100vh - 80px);
 		display: flex;
@@ -69,7 +79,7 @@
 		-ms-flex-align: center;
 		align-items: center;
 		border: 1px solid var(--border);
-		background-color: var(--navbar);
+		background-color: var(--clock-background);
 		border-radius: 50%;
 	}
 
@@ -93,7 +103,7 @@
 		-webkit-transform-origin: top;
 		-ms-transform-origin: top;
 		transform-origin: top;
-		background-color: var(--link-faded);
+		background-color: var(--clock-hour-lines);
 		border-radius: 0 0 5px 5px;
 		border: 1px solid var(--border);
 		transition: 1s;
@@ -104,7 +114,7 @@
 		height: 30px;
 		width: 8px;
 		margin: 2px;
-		background-color: var(--link-faded);
+		background-color: var(--clock-hour-lines);
 		border: 1px solid var(--border);
 		/*z-index: 0;*/
 	}
