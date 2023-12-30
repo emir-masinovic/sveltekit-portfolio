@@ -22,7 +22,7 @@
 
 <style>
 	.home-container {
-		display: flex;
+		display: var(--page-display);
 		flex-direction: column;
 		padding: 20px;
 		gap: 40px;

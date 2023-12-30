@@ -15,6 +15,11 @@
 
 	function toggleMenu() {
 		isMenuActive = !isMenuActive;
+		if (isMenuActive) {
+			document.body.classList.toggle('menu-active');
+		} else {
+			document.body.classList.toggle('menu-active');
+		}
 	}
 
 	function toggleTheme() {
@@ -27,10 +32,10 @@
 		const favicon = document.querySelector('[rel=icon]');
 		if (isLightTheme) {
 			favicon.setAttribute('href', '/faviconLight.svg');
-			document.body.classList.add('light-theme');
+			document.body.classList.toggle('light-theme');
 		} else {
 			favicon.setAttribute('href', '/favicon.svg');
-			document.body.classList.remove('light-theme');
+			document.body.classList.toggle('light-theme');
 		}
 	}
 

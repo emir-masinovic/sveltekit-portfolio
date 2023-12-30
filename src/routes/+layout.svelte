@@ -3,7 +3,10 @@
 </script>
 
 <Navbar />
-<slot />
+
+<div class="container">
+	<slot />
+</div>
 
 <style>
 	/*@import "../css/breakpoint.css";*/
@@ -23,6 +26,8 @@
 		--border: black;
 		--transition-time: 0.6s;
 		font-size: 62.5%;
+
+		--page-display: initial;
 	}
 
 	:global(.light-theme) {
@@ -35,5 +40,15 @@
 		transition: var(--transition-time);
 		color: var(--text);
 		font-size: 1.6rem;
+	}
+
+	:global(.menu-active) {
+		/* Hides dvh when URL visible on phones */
+		/* But also casues page to go back to top */
+		--page-display: none;
+	}
+
+	.container {
+		display: var(--page-display);
 	}
 </style>
