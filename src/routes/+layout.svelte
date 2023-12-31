@@ -20,6 +20,11 @@
 		font-family: 'Poppins', sans-serif;
 	}
 
+	:global(*):focus {
+		outline: 3px dashed #007bff;
+		outline-offset: 3px;
+	}
+
 	:root {
 		--background: #464e56;
 		--text: #fff;
@@ -50,5 +55,10 @@
 
 	.container {
 		display: var(--page-display);
+	}
+	@media (min-width: 700px) {
+		.container {
+			display: initial;
+		}
 	}
 </style>

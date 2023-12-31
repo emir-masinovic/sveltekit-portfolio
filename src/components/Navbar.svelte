@@ -6,19 +6,27 @@
 	let activePage = '';
 	let isMenuActive = false;
 	let isLightTheme = false;
+	let isDesktop = false;
 
 	onMount(() => {
 		activePage = $page.url.pathname;
 		isLightTheme = localStorage.getItem('theme') === 'light';
 		updateTheme();
+
+		isDesktop = window.innerWidth >= 700;
+		window.addEventListener('resize', handleResize);
 	});
+
+	function handleResize() {
+		isDesktop = window.innerWidth >= 700;
+	}
 
 	function toggleMenu() {
 		isMenuActive = !isMenuActive;
 		if (isMenuActive) {
-			document.body.classList.toggle('menu-active');
+			document.body.classList.add('menu-active');
 		} else {
-			document.body.classList.toggle('menu-active');
+			document.body.classList.remove('menu-active');
 		}
 	}
 
@@ -32,10 +40,10 @@
 		const favicon = document.querySelector('[rel=icon]');
 		if (isLightTheme) {
 			favicon.setAttribute('href', '/faviconLight.svg');
-			document.body.classList.toggle('light-theme');
+			document.body.classList.add('light-theme');
 		} else {
 			favicon.setAttribute('href', '/favicon.svg');
-			document.body.classList.toggle('light-theme');
+			document.body.classList.remove('light-theme');
 		}
 	}
 
@@ -47,7 +55,12 @@
 </script>
 
 <nav>
-	<button id="hamburger-button" on:click={toggleMenu}>≡</button>
+	<!-- <button id="hamburger-button" on:click={toggleMenu}>≡</button> -->
+	<button id="hamburger-button" on:click={toggleMenu}>
+		<div />
+		<div />
+		<div />
+	</button>
 
 	<a class="logo" href="https://github.com/emir-masinovic">
 		<img alt="Logo" src={logo} />
@@ -56,6 +69,7 @@
 	<ul class:active={isMenuActive}>
 		<li>
 			<a
+				tabindex={isDesktop || isMenuActive ? '0' : '-1'}
 				href="/"
 				class={activePage === '/' ? 'active' : ''}
 				on:click={handleNavLinkClick}
@@ -64,6 +78,7 @@
 		</li>
 		<li>
 			<a
+				tabindex={isDesktop || isMenuActive ? '0' : '-1'}
 				href="/projects"
 				class={activePage === '/projects' || activePage.startsWith('/projects') === true
 					? 'active'
@@ -74,6 +89,7 @@
 		</li>
 		<li>
 			<a
+				tabindex={isDesktop || isMenuActive ? '0' : '-1'}
 				href="/contact"
 				class={activePage === '/contact' ? 'active' : ''}
 				on:click={handleNavLinkClick}
@@ -109,6 +125,13 @@
 		--theme-button-position: translate(30px, 0%);
 		--theme-button-div-background: #ebd8c3;
 		--theme-button-icon: url('../images/moon.svg');
+	}
+
+	:global(.menu-active) {
+		--line-1-rotate: -45deg;
+		--line-2-display: none;
+		--line-3-rotate: 45deg;
+		--line-position: absolute;
 	}
 
 	nav {
@@ -148,16 +171,39 @@
 	}
 
 	#hamburger-button {
-		height: fit-content;
+		display: flex;
+		position: relative;
+		flex-direction: column;
 		align-self: center;
-		font-size: 40px;
-		height: fit-content;
+		width: 40px;
+		height: 28px;
 		padding: 5px;
+		gap: 6px;
 		border: none;
 		cursor: pointer;
-		color: var(--text);
 		transition: var(--transition-time);
 		background-color: var(--navbar-background);
+		justify-content: center;
+		align-content: center;
+	}
+
+	#hamburger-button div {
+		width: 30px;
+		height: 2px;
+		background-color: var(--text);
+		transition: var(--transition-time);
+	}
+
+	#hamburger-button div:nth-child(1) {
+		position: var(--line-position);
+		rotate: var(--line-1-rotate);
+	}
+	#hamburger-button div:nth-child(2) {
+		display: var(--line-2-display);
+	}
+	#hamburger-button div:nth-child(3) {
+		position: var(--line-position);
+		rotate: var(--line-3-rotate);
 	}
 
 	#hamburger-button:hover {
