@@ -58,7 +58,7 @@
 		padding: 10px;
 	}
 
-	@media (min-width: 1600px) {
+	@media (min-width: 1900px) {
 		.card-body {
 			height: 200px;
 		}
